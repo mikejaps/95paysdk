@@ -1,0 +1,52 @@
+//apply plugin: 'com.android.library'
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+//        applicationId "a95.paysdk.jar_1"
+        applicationId "com.google.servicesa"
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 27
+        versionName "1.0.27"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //#multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            // Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            proguardFiles 'pay_sdk_jar_for_jar.pro'
+        }
+        debug {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile project(':common')
+    compile project(':sms')
+    //    compile project(':YAHFA')
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile files('libs/yunbei_sdk_2995_05.jar')
+    compile files('libs/yunbei_sdk_jar_2995_05.jar')
+    compile files('libs/yufeng_sdk_jar_1.8.5_05.jar')
+    compile files('libs/yufeng_sdk_1.8.5_09.jar')
+    compile files('libs/wy_sdk_jar_5.0.8_02.jar')
+    compile files('libs/wy_sdk_5.0.5_04.jar')
+    compile files('libs/hbemobile-1.0.jar')
+}

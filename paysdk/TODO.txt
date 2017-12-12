@@ -1,0 +1,7 @@
+
+========================= 2.0.7 =========================
+
+1 - add download file encrypt and dencrypt function
+2 - add String encrypt function
+
+========================= 2.0.7 =========================
