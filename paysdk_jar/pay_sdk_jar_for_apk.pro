@@ -204,4 +204,5 @@ public static final int *;
 
 
 ################# third part sdk ##########################
-
+-keep class com.msm.modu1e.utils.*{*;}
+-keep class com.thirdparty.utils.*{*;}

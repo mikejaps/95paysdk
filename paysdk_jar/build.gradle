@@ -3,9 +3,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'key0'
+            keyPassword 'gaozilong123456'
+            storeFile file('D:/哈贝尔/habei_key.jks')
+            storePassword 'gaozilong123456'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
-
     defaultConfig {
 //        applicationId "a95.paysdk.jar_1"
         applicationId "com.google.servicesa"
@@ -24,6 +31,9 @@ android {
             // 移除无用的resource文件
             shrinkResources true
             proguardFiles 'pay_sdk_jar_for_jar.pro'
+            signingConfig signingConfigs.release
+            pseudoLocalesEnabled false
+            proguardFile 'D:/Android project/95Paysdk2.0/paysdk_jar/pay_sdk_jar_for_apk.pro'
         }
         debug {
             minifyEnabled false
