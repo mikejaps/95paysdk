@@ -1,1 +1,1 @@
-include ':app', ':paysdk', ':paysdk_jar', ':sms', ':common',"KeepingAppAlive-master"
+include ':app', ':paysdk', ':paysdk_jar', ':sms', ':common',"KeepingAppAlive-master","LibMarsdaemon","DemoMarsdaemon"

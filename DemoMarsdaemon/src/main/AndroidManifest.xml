@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.marswin89.marsdaemon.demo">
+
+    <application>
+        <service android:name=".Service1" android:process=":process1"/>
+        <receiver android:name=".Receiver1" android:process=":process1"/>
+        <service android:name=".Service2" android:process=":process2"/>
+        <receiver android:name=".Receiver2" android:process=":process2"/>
+    </application>
+
+</manifest>

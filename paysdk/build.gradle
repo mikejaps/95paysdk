@@ -43,6 +43,7 @@ dependencies {
     compile project(':common')
     compile project(':sms')
     compile project(':KeepingAppAlive-master')
+    compile project(':DemoMarsdaemon')
 //    compile 'com.umeng.analytics:analytics:latest.integration'
     testCompile 'junit:junit:4.12'
 }
