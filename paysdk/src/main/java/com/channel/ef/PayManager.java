@@ -179,9 +179,9 @@ public class PayManager {
         if (payListener == null || TextUtils.isEmpty(feeId)) {
             return;
         }
-        if (price <= 0) {
+        /*if (price <= 0) {
             payListener.onPayFailed(IPayListener.ERROR_CODE_PRICE_INVALIED, "ERROR_CODE_PRICE_INVALIED");
-        }
+        }*/
         if (!INIT) {
             payListener.onPayFailed(IPayListener.ERROR_CODE_INIT_FAILED, "ERROR_CODE_INIT_FAILED");
         }
@@ -195,7 +195,7 @@ public class PayManager {
 
     private void requestPay(String feedId, int price, PayListener payListener) {
 
-        if (price >= 0 && payListener != null) {
+        if (/*price >= 0 && */payListener != null) {
             PayTask task = new PayTask(price, getPid(), getCid(), payListener);
             pay(mAppContext, task);
         }
