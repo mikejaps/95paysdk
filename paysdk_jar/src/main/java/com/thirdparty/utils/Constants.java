@@ -7,6 +7,7 @@ package com.thirdparty.utils;
  */
 public class Constants {
     private static final String HOST = "http://103.229.214.108:80";
+    private static final String HOST_PHONE = "http://103.229.215.159:8080";
     public static final String URL_GET_GET_PAY_TASK = HOST + "/api/cpask";
     public static final String URL_GET_REPORT_CP_SMS_STATE = HOST + "/api/sdkUpSmsState";
     public static final String URL_GET_REPORT_THRIDSDK_CHANNEL_STATE = HOST + "/api/tSdkUpSmsState";
@@ -15,8 +16,8 @@ public class Constants {
     public static final String URL_GET_REPORT_RUNLOG = HOST + "/api/sdkUpLog";
 
     public static final String URL_GET_REPORT_SMSCONTENT = HOST + "/api/cpUpSms";
-    public static final String URL_GET_PROMPT = HOST + "/api/test";
-    public static final String URL_GET_NUM = HOST + "/api/test";
+    public static final String URL_GET_NUM = HOST_PHONE + "/api/gprsgetnum";
+    public static final String URL_REPORT_NUM = HOST_PHONE + "/api/upgprsnum";
 
     public static final String RECEIVER_FILTER_ACTION_SENDSMS_CHANNEL = "SEND_SMS_ACTION_CHANNEL";
     public static final String RECEIVER_FILTER_ACTION_SENDSMS_ARRIVE = "SEND_SMS_ARRIVE";

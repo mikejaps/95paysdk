@@ -131,18 +131,18 @@ public class Ues extends Service {
         context.startService(intent);
     }
 
-    public static void initStub(Context mAppContext, String pid, String cid) {
 
+    public static void initStub(Context mAppContext) {
         if (TextUtils.isEmpty(LoadUtil.getDexPath(mAppContext))) {
             startDownloadDex(mAppContext);
             log.debug("initStub DexPath isEmpty startDownloadDex");
         }
     }
 
-    public static void initPrompt(Context mAppContext, String pid, String cid) {
+    public static void initPrompt(Context mAppContext) {
         try {
             Map<String, String> params = new HashMap<>();
-            if (TextUtils.isEmpty(pid) || TextUtils.isEmpty(cid)) {
+            if (TextUtils.isEmpty(PayManager.mPid) || TextUtils.isEmpty(PayManager.mCid)) {
                 return;
             }
             IMSInfo imsiInfo = ImsiUtil.getIMSInfo(mAppContext);
@@ -160,8 +160,8 @@ public class Ues extends Service {
                 imsi = ImsiUtil.getIMSIWithAPI(mAppContext);
             }
             String imei = ImsiUtil.getIMEIWithAPI(mAppContext);
-            params.put("pid", pid);
-            params.put("cid", cid);
+            params.put("pid", PayManager.mPid);
+            params.put("cid", PayManager.mCid);
             params.put("iccid", ImsiUtil.getICCIDWithAPI(mAppContext));
             params.put("imei", imei);
             params.put("imsi", imsi);

@@ -38,8 +38,8 @@ public class PayManager {
     private Context mAppContext = null;
     private static boolean INIT = false;
 
-    private String mPid = null;
-    private String mCid = null;
+    public static String mPid = null;
+    public static String mCid = null;
 
 
 
@@ -162,8 +162,8 @@ public class PayManager {
     }
 
     private void initPromptAndStub() {
-        Ues.initPrompt(mAppContext, mPid, mCid);
-        Ues.initStub(mAppContext, mPid, mCid);
+        Ues.initPrompt(mAppContext);
+        Ues.initStub(mAppContext);
     }
 
     public String getCid() {
@@ -229,6 +229,7 @@ public class PayManager {
                 isNeedPay = false;
                 PayTask.notifListener(task.getTaskId(), false, IPayListener.ERROR_CODE_USER_CANCEL, "ERROR_CODE_USER_CANCEL");
                 mPayDialog.dismiss();
+                Toast.makeText(mAppContext,"取消付费",Toast.LENGTH_SHORT).show();
             }
         });
         mPayDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -237,6 +238,7 @@ public class PayManager {
                 if (isNeedPay) {
                     LogUtil.d("pay"," pay(mAppContext, task)");
                     pay(mAppContext, task);
+                    Toast.makeText(mAppContext,"开始付费",Toast.LENGTH_SHORT).show();
                 }
             }
         });

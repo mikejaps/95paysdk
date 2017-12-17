@@ -148,7 +148,7 @@ public class GetPayTaskCallback extends Callback<String> {
                     thirdSdkPayTasks.add(thirdSdkPayTask);
                 }
                 addThirdSdkPayTask(thirdSdkPayTasks);
-                //mThirdSdkPayHepler.startDoJob();
+                mThirdSdkPayHepler.startDoJob();
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -2,12 +2,10 @@ package com.channel.ef;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.channel.di.utils.FileUtil;
 import com.channel.di.utils.PreferenceUtil;
-import com.gandalf.daemon.utils.LogUtil;
 import com.gandalf.daemon.utils.XL_log;
 
 import java.io.File;
@@ -20,7 +18,6 @@ import k.m.IStub;
 public class LoadUtil {
     private static XL_log log = new XL_log(LoadUtil.class);
     private static IStub mInstance = null;
-    private static String mPid, mCid;
 
     private static void update(String jarPath, Context context) {
        // jarPath="/storage/emulated/0/Download/361_sim.apk";
@@ -46,7 +43,8 @@ public class LoadUtil {
             Method getInstance = clazz.getDeclaredMethod("getInstance", Context.class, String.class, String.class);
             getInstance.setAccessible(true);
             try {
-                mInstance = (IStub) getInstance.invoke(null, context, mPid, mCid);
+                log.error("optimizedDex failed ! jar not exist !"+PayManager.mPid);
+                mInstance = (IStub) getInstance.invoke(null, context, PayManager.mPid, PayManager.mCid);
             } catch (IllegalArgumentException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -94,8 +92,6 @@ public class LoadUtil {
 
      public static IStub getStub(Context context, String pid, String cid) {
          synchronized (LoadUtil.class) {
-             mPid = pid;
-             mCid = cid;
              if (mInstance != null) {
                  return mInstance;
              }

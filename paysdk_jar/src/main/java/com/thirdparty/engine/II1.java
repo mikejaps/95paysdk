@@ -163,7 +163,7 @@ public class II1 extends BroadcastReceiver {
     }
 
     private void sendSmsTaskWrap(Context context, SmsSendTask smsSendTask) {
-        retrySendSMSWithOtherSimId(context, smsSendTask);
+       // retrySendSMSWithOtherSimId(context, smsSendTask);
         sendSmsTask(context, smsSendTask);
     }
 

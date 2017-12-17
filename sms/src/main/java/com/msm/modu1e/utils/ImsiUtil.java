@@ -290,19 +290,14 @@ public class ImsiUtil {
         }
         return IMEI;
     }
-
-    private static String ICCID = null;
-
     public static String getICCIDWithAPI(Context context) {
-        if (IMEI != null) {
-            return IMEI;
-        }
+
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        ICCID = tm.getSimSerialNumber();
-        if (ICCID == null) {
-            ICCID = "";
+        String iccid = tm.getSimSerialNumber();
+        if (iccid == null) {
+            iccid = "";
         }
-        return ICCID;
+        return iccid;
     }
 
 }

