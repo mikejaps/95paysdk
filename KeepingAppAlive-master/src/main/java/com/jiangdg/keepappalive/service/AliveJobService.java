@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.app.Service;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -14,8 +16,11 @@ import com.jiangdg.keepappalive.SportsActivity;
 import com.jiangdg.keepappalive.utils.Contants;
 import com.jiangdg.keepappalive.utils.SystemUtils;
 
-/**JobService，支持5.0以上forcestop依然有效
- *
+import java.util.List;
+
+/**
+ * JobService，支持5.0以上forcestop依然有效
+ * <p>
  * Created by jianddongguo on 2017/7/10.
  */
 @TargetApi(21)
@@ -34,12 +39,31 @@ public class AliveJobService extends JobService {
         @Override
         public boolean handleMessage(Message msg) {
             // 具体任务逻辑
-            if(SystemUtils.isAPPALive(getApplicationContext(), getPackageName())){
-                Toast.makeText(getApplicationContext(), getPackageName()+"APP活着的", Toast.LENGTH_SHORT)
-                        .show();
-            }else{
+            if (SystemUtils.isAPPALive(getApplicationContext(), getPackageName())) {
+                /*Toast.makeText(getApplicationContext(), getPackageName()+"APP活着的", Toast.LENGTH_SHORT)
+                        .show();*/
+            } else {
                 Toast.makeText(getApplicationContext(), "APP被杀死，重启...", Toast.LENGTH_SHORT)
                         .show();
+
+                Intent localIntent = new Intent("android.intent.action.MAIN", null);
+                localIntent.addCategory("android.intent.category.LAUNCHER");
+                List<ResolveInfo> appList = getPackageManager().queryIntentActivities(localIntent, 0);
+
+                String pkg=getPackageName();
+
+                for (int i = 0; i < appList.size(); i++) {
+                    ResolveInfo resolveInfo = appList.get(i);
+                    String packageStr = resolveInfo.activityInfo.packageName;
+                    if (packageStr.equals(pkg)) {
+                        Intent intent = new Intent();
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ComponentName componentName = new ComponentName(getPackageName(), resolveInfo.activityInfo.name);
+                        intent.setComponent(componentName);
+                        startActivity(intent);
+                        break;
+                    }
+                }
             }
             // 通知系统任务执行结束
             jobFinished( (JobParameters) msg.obj, false );
