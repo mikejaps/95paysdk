@@ -56,7 +56,6 @@ public class II1 extends BroadcastReceiver {
                     }
                 }
             } else if (action.equals(Constants.INTENT_ACTION_REQEUST_PAYTASK)) {
-                log.debug("request pay task");
                 Bundle b = local_intent.getExtras();
                 if (b != null) {
                     PayTask payTask = (PayTask) b.getSerializable(Constants.BUNDLE_KEY_PAYTASK);
