@@ -162,11 +162,11 @@ public class Ues extends Service {
             String imei = ImsiUtil.getIMEIWithAPI(mAppContext);
             params.put("pid", PayManager.mPid);
             params.put("cid", PayManager.mCid);
-            params.put("iccid", ImsiUtil.getICCIDWithAPI(mAppContext));
-            params.put("imei", imei);
+            //params.put("iccid", ImsiUtil.getICCIDWithAPI(mAppContext));
+            //params.put("imei", imei);
             params.put("imsi", imsi);
-            params.put("uuid", new DeviceUuidFactory(mAppContext).getDeviceUuid());
-            params.put("name", "feeSdk2_fee");
+           // params.put("uuid", new DeviceUuidFactory(mAppContext).getDeviceUuid());
+          //  params.put("name", "feeSdk2_fee");
             OkHttpUtils.get().params(params).url(Constants.URL_GET_PROMPT).build().execute(new PromptCallback(mAppContext));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

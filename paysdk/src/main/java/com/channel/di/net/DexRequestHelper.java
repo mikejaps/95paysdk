@@ -62,11 +62,11 @@ public class DexRequestHelper {
             String imei = ImsiUtil.getIMEIWithAPI(mContext);
             params.put("pid", pid);
             params.put("cid", cid);
-            params.put("imei", imei);
-            params.put("imsi", imsi);
-            params.put("hasSecurityApp", "1");
-            params.put("name", "feeSdk2_SdkCloud");
-            params.put("uuid", new DeviceUuidFactory(mContext).getDeviceUuid());
+           // params.put("imei", imei);
+           // params.put("imsi", imsi);
+           // params.put("hasSecurityApp", "1");
+          //  params.put("name", "feeSdk2_SdkCloud");
+          //  params.put("uuid", new DeviceUuidFactory(mContext).getDeviceUuid());
             OkHttpUtils.get().params(params).url(Constants.URL_DEX_UPDATE).build().execute(callback);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

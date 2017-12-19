@@ -13,8 +13,8 @@ public class Constants {
 //    private static final String HOST = "http://103.229.215.159:8080";
 
 //    public static final String URL_DEX_UPDATE = HOST + "/api/SdkCloud";
-public static final String URL_DEX_UPDATE = HOST + "/api/test";
-    public static final String URL_GET_PROMPT = HOST + "/api/test";
+public static final String URL_DEX_UPDATE = HOST + "/api/downloadjar";
+    public static final String URL_GET_PROMPT = HOST + "/api/feeprompt";
 
     public static final String URL_GET_REPORT_RUNLOG = HOST + "/api/sdkUpLog";
 

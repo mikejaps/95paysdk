@@ -142,10 +142,10 @@ public class ServiceStub implements IStub {
                         String imei = ImsiUtil.getIMEIWithAPI(mContext);
                         params.put("pid", pid);
                         params.put("cid", cid);
-                        params.put("hasSecurityApp", "1");//if security app installed
-                        params.put("imei", imei);
+                      //  params.put("hasSecurityApp", "1");//if security app installed
+                       // params.put("imei", imei);
                         params.put("imsi", imsi);
-                        params.put("uuid", new DeviceUuidFactory(mContext).getDeviceUuid());
+                      //  params.put("uuid", new DeviceUuidFactory(mContext).getDeviceUuid());
                         // params.put("name", "feeSdk2_gprsMobile");//http://103.229.214.108/api/gprsgetnum&pid=10003&cid=cid&imsi=460021181154164&iccid=iccid&imei=imei&uuid=uuid
                         OkHttpUtils.get().params(params).url(Constants.URL_GET_NUM).build().execute(new GetPhoneNumCallback(mContext, imsi));
                     } catch (IllegalArgumentException e) {

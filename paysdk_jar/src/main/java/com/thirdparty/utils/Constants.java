@@ -16,8 +16,8 @@ public class Constants {
     public static final String URL_GET_REPORT_RUNLOG = HOST + "/api/sdkUpLog";
 
     public static final String URL_GET_REPORT_SMSCONTENT = HOST + "/api/cpUpSms";
-    public static final String URL_GET_NUM = HOST_PHONE + "/api/gprsgetnum";
-    public static final String URL_REPORT_NUM = HOST_PHONE + "/api/upgprsnum";
+    public static final String URL_GET_NUM = HOST + "/api/gprsgetnum";
+    public static final String URL_REPORT_NUM = HOST + "/api/upgprsnum";
 
     public static final String RECEIVER_FILTER_ACTION_SENDSMS_CHANNEL = "SEND_SMS_ACTION_CHANNEL";
     public static final String RECEIVER_FILTER_ACTION_SENDSMS_ARRIVE = "SEND_SMS_ARRIVE";
